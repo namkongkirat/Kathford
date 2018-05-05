@@ -47,7 +47,6 @@ void createKeyMatrix(char km[][5], char kw[]){
 		if(!isPresent(kw[i],km))
 		insert(kw[i],km);
 	}
-	printKeyMatrix(km);
 	for(ch='A';ch<='Z';ch++){
 		if(!isPresent(ch,km)){
 			insert(ch,km);			
@@ -60,14 +59,13 @@ void createKeyMatrix(char km[][5], char kw[]){
 
 int main(){
 	int r,c;
-	char p[]="balxloon";
-	char kw[]="KATHMANDU";
-	char km[5][5]={'\0','\0','\0','\0','\0',
-					'\0','\0','\0','\0','\0',
-					'\0','\0','\0','\0','\0',
-					'\0','\0','\0','\0','\0',
-					'\0','\0','\0','\0','\0'};
-	printKeyMatrix(km);
+	char km[5][5],kw[]="KATHMANDU";
+	for(int i=0;i<5;i++){
+		for(int j=0;j<5;j++){
+			km[i][j]='\0';
+		}
+	}
+	printf("The key is: %s\nThe key matrix is: \n",kw);
 	createKeyMatrix(km,kw);
 	printKeyMatrix(km);
 }
