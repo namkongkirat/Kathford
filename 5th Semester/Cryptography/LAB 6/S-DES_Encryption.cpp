@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int firstKeyGeneration(int k[]){
+int firstKeyGeneration(int k[10]){
     int i,  P10[10] = {3, 5, 2, 7, 4, 10, 1, 9, 8, 6}, P10k[10], P8[8] = {6, 3, 7, 4, 8, 5, 10, 9}, P8k1[8], LS1[10], LS2[10];
 
     for (i = 0; i <= 9; i++)
@@ -25,7 +25,7 @@ int firstKeyGeneration(int k[]){
     return P8k1[8];
 }
 
-int secondKeyGeneration(int k2,){
+int secondKeyGeneration(int K[10]){
     int i,  P10[10] = {3, 5, 2, 7, 4, 10, 1, 9, 8, 6}, P10k[10], P8[8] = {6, 3, 7, 4, 8, 5, 10, 9}, P8k1[8], P8k2[8], LS1[10], LS2[10];
 
     for (i = 0; i <= 9; i++)
@@ -74,8 +74,8 @@ int main()
 		printf("K[%d]:", i + 1);
 		scanf("%d", &K[i]);
 	}
-	k1[8]=firstKeyGeneration(K[10]);
-    k2[8]=secondKeyGeneration(K[10]);
+	k1[8]=firstKeyGeneration(K);
+    k2[8]=secondKeyGeneration(K);
 
     printf("First key is : ");
 	for (i = 0; i < 8; i++)

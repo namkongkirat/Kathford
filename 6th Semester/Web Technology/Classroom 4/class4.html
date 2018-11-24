@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script>
+        function changeCont(){
+            var heading=document.getElementById("head1").innerHTML;
+            var heading2=document.getElementById("head2").innerHTML;
+
+            document.getElementById("head1").innerHTML=heading2;
+            document.getElementById("head2").innerHTML=heading;
+        }
+        </script>
+    </head>
+    <body>
+        <h1 id="head1"> This is test Heading.</h1>
+        <h1 id="head2"> This is test Heading 2.</h1>
+        <p>..............</p>
+        <input type="button" onClick="changeCont();" />
+    </body>
+</html>

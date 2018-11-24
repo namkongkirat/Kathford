@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title> Dummy Form </title>
+    </head>
+    <script>
+        function Alert(){
+        var username=document.form1.uname.value;
+        var password=document.form1.pass.value;
+        if(username=="Ram" && password=="hari"){
+            alert("Welcome");
+        }else{
+            alert("Wrong Account");
+        }
+    }
+    </script>
+    <body>
+        <form action="" name = "form1">
+            <p style="color:black">Name:</p>
+            <input type="text", name="uname">
+            <p style="color:black">Password:</p>
+            <input type="password", name="pass"><br>
+            <input type="button" onclick="Alert();" value="Login">
+        </form>
+    </body>
+</html>

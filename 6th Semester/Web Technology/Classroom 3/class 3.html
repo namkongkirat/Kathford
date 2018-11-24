@@ -1,0 +1,39 @@
+<html>
+    <head>
+
+<script>
+    alert("Hello world");
+    function fun1(){
+        var ab="Ram";
+        alert("Hello" + " " + ab + "!");
+    }
+
+    function fun2(){
+        var cd=confirm("Are you sure?");
+        alert(cd);
+        if(cd==true){
+            alert("That's good");
+        }
+    }
+    
+    function fun3(){
+        var ef=document.form1.uname.value;
+        document.form1.uname2.value=ef;
+        alert(ef);
+    }
+</script>
+</head>
+<body>
+    <h1 class="headings1" onClick="alert('Test Alert')">Kathford</h1>
+    <p class="headings2" onclick="fun1();">Apple
+        <h2>This is H2 - 2 test</h2>
+        <a href="http://google.com">Google.com</a><br />
+        <a href="http://googles.com">Googles.com</a>
+<form name="form`">
+    Name:<input type="text" name="uname" />
+    Name2:<input type="text" name="uname2" />
+    <input type="button" onclick="fun3();" value="Submit" />
+</form>
+
+</body>
+</html>

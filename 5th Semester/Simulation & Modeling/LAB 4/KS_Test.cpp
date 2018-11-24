@@ -30,15 +30,15 @@ int main(){
 	for (i = 0; i < n; i++)         
 	{
 		printf("%.2f\t", RN[i]);
-		a = (float)(i + 1) / n;
+		a = (float)(i-1) / n;
 		printf("%.2f\t", a);
 		b = (float) i / n;
 		printf("%.2f\t", b);
-		c = (float) a - RN[i];
+		c = (float) b - RN[i];
 		printf("%.2f\t\t", c);
 		if(dp < c)
 			dp = c;
-		d = (float) RN[i] - b;
+		d = (float) RN[i] - a;
 		printf("%.2f\n", d);
 		if(dm < d)
 			dm = c;

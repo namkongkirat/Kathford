@@ -1,9 +1,9 @@
 % Not working
-horse(bluebird).
+horse('bluebird').
 horse(X):-
 	mammal(X).
-parent(bluebird, charlie).
-offspring(charlie, bluebird).
+parent('bluebird', 'charlie').
+offspring('charlie', 'bluebird').
 mammal(X):-parent(X, Y), offspring(Y, X).
 
 % Second premise
@@ -17,3 +17,4 @@ hate(X, Y):-
 	not(loyal_to(X, Y)).
 try_to_assassinate("marcus", "caesar").
 pompeian("marcus").
+
