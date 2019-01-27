@@ -21,7 +21,6 @@ if(isset($_GET['msg'])){
     echo '<div class="warning">' , $_GET['msg'], '</div>';
 }
 ?>
-
 <form action = "logincheck2.php" method="POST">
     Name:
     <input type="text", name="uname"><br>

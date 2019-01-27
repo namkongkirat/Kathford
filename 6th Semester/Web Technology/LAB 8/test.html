@@ -1,0 +1,27 @@
+<html>
+<head>
+    <script>
+    function formfill(){
+        var name=document.forms["f1"]["uname"].value;
+        var pass=document.forms["f1"]["pass"].value;
+        if(name == ""){
+            alert("Please enter name.");
+            return false;
+        }
+        if(pass == ""){
+            alert("Please enter the password.");
+            return false;
+        }
+    }
+    </script>
+</head>
+<body>
+    <form name="f1" action="logincheck.php" onsubmit="return formfill()" method = "POST">
+            Name:
+            <input id="na" type="text", name="uname">
+            Password:
+            <input id="pa" type="password", name="pass"><br>
+            <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
