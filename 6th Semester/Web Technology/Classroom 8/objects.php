@@ -15,6 +15,7 @@ class User{
 	Function saveUser3($val1,$val2){
 		return"Hello Nepal".$val1."".$val2;
 	}
+	Function saveuser4
 }
 $user=new User;
 //$user->saveUser();
