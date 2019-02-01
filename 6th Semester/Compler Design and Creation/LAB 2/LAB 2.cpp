@@ -1,347 +1,350 @@
-#include <iostream>
-#include <string.h>
-#include <ctype.h>
-#include <stack>
+#include<iostream>
+#include<string.h>
+#include<string>
 
 using namespace std;
 
-int prec(char c)
-{
-    if(c == '^')
-    return 3;
-    else if(c == '*' || c == '/')
-    return 2;
-    else if(c == '+' || c == '-')
-    return 1;
-    else
-    return -1;
-}
-
-void append(char* s, char e)
-{
-        int len = strlen(s);
-        s[len] = e;
-        s[len+1] = '\0';
+char stack[20];
+int top = -1;
+void push(char x){
+    stack[++top] = x;
 }
  
-char infixToPostfix(char exp[100]){
-std::stack<char> temp;
-temp.push('N');
-char op[100];
-op[0]='\0';
-int l=strlen(exp);
-for (int i=0;i<l;i++){
-    if (isalpha(exp[i]) || exp[i]=='#'){
-        append(op,exp[i]);
-    }
-    else if (exp[i]=='('){
-        temp.push('(');
-    }
-    else if (exp[i]==')'){
-        while(temp.top() != 'N' && temp.top() != '(')
-            {
-                char c = temp.top();
-                temp.pop();
-                append(op,c);
-            }
-            if(temp.top() == '(')
-            {
-                char c = temp.top();
-                temp.pop();
-            }
-    }
-    else{
-            while(temp.top() != 'N' && prec(exp[i]) <= prec(temp.top()))
-            {
-                char c = temp.top();
-                temp.pop();
-                append(op,c);
-            }
-            temp.push(exp[i]);
-        }
+char pop(){
+    if(top == -1)
+        return -1;
+    else
+        return stack[top--];
 }
-while(temp.top() != 'N')
-    {
-                char c = temp.top();
-                temp.pop();
-                append(op,c);
-    }
-	strcpy(exp,op);
+ 
+int priority(char x){
+    if(x == '(')
+        return 0;
+    if(x == '+' || x == '.' || x == '*')
+        return 1;
 }
 
-char tempCat(char exp[100]){
+struct Node{
+    int left, right;
+    char value;
+    bool nullable;
+    int firstpos[20], lastpos[20], followpos[20], position; 
+};
+
+void calculateNullable(struct Node *node, int expLength){
+    for(int i = 0; i < expLength; i++){
+        if(node[i].value == '-'){
+            node[i].nullable = NULL;
+        }
+        else if(node[i].value == ' ' || node[i].value == '*'){
+            node[i].nullable = true;
+            
+        } 
+        else if(isalpha(node[i].value) && node[i].position == i + 1){
+            node[i].nullable = false;
+        }
+        else if(node[i].value == '+'){
+            node[i].nullable = node[node[i].left].nullable || node[node[i].right].nullable;
+        }
+        else if(node[i].value == '.'){
+            node[i].nullable = node[node[i].left].nullable && node[node[i].right].nullable;
+        }
+        else{
+            node[i].nullable = false;
+        }
+    }
+}
+
+void calculatePos(struct Node *node, int expLength){
+    for(int i = 0; i < expLength; i++){
+        if(isalpha(node[i].value) || node[i].value == '#'){
+            int j = 0;
+            node[i].firstpos[j]='\0';
+            node[i].lastpos[j]='\0';
+            node[i].firstpos[j] = node[i].position;
+            node[i].lastpos[j] = node[i].position; 
+            node[i].firstpos[j+1] = '\0';
+            node[i].lastpos[j+1] = '\0';
+        }
+        else if(node[i].value == '*'){
+            int j = 0, k = 0;
+            for(j = 0; node[node[i].left].firstpos[j] != '\0'; j++){
+                node[i].firstpos[j] = node[node[i].left].firstpos[j];
+            }
+            node[i].firstpos[j] = '\0';
+            for(k = 0; node[node[i].left].lastpos[k] != '\0'; k++){
+                node[i].lastpos[k] = node[node[i].left].lastpos[k];
+            }
+            // node[i].firstpos[j] = '\0';
+            node[i].lastpos[k] = '\0';
+        }
+        else if(node[i].value == '+'){
+            int countFirst = 0, countLast = 0;
+            for(int j = 0; node[node[i].left].firstpos[j] != '\0'; j++){
+                node[i].firstpos[j] = node[node[i].left].firstpos[j];
+                countFirst = j;
+            }
+            for(int j = 0; node[node[i].left].lastpos[j] != '\0'; j++){
+                node[i].lastpos[j] = node[node[i].left].lastpos[j];
+                countLast = j;
+            }
+            node[i].firstpos[countFirst+1] = '\0';
+            node[i].lastpos[countLast+1] = '\0';
+            for(int j = 0; node[node[i].right].firstpos[j] != '\0'; j++){
+                for(int k = 0; node[i].firstpos[k]!= '\0'; k++){
+                    if(node[i].firstpos[k] == node[node[i].right].firstpos[j]){
+                        break;
+                    }
+                    else{
+                        node[i].firstpos[countFirst+1] = node[node[i].right].firstpos[j];
+                        countFirst++;
+                    }
+                }
+            }
+            for(int j = 0; node[node[i].right].lastpos[j] != '\0'; j++){
+                for(int k = 0; node[i].lastpos[k]!= '\0'; k++){
+                    if(node[i].lastpos[k] == node[node[i].right].lastpos[j]){
+                        break;
+                    }
+                    else{
+                        node[i].lastpos[countLast+1] = node[node[i].right].lastpos[j];
+                        countLast++;
+                    }
+                }
+            }
+            node[i].firstpos[countFirst+1] = '\0';
+            node[i].firstpos[countLast+1] = '\0';
+        }
+        else if(node[i].value == '.'){
+            if(node[node[i].left].nullable){
+                int countFirst = 0;
+                for(int j = 0; node[node[i].left].firstpos[j] != '\0'; j++){
+                    node[i].firstpos[j] = node[node[i].left].firstpos[j];
+                    countFirst = j;
+                }
+                node[i].firstpos[countFirst+1] = '\0';
+                for(int j = 0; node[node[i].right].firstpos[j] != '\0'; j++){
+                    for(int k = 0; node[i].firstpos[k]!= '\0'; k++){
+                        if(node[i].firstpos[k] == node[node[i].right].firstpos[j]){
+                            break;
+                        }
+                        else{
+                            node[i].firstpos[countFirst+1] = node[node[i].right].firstpos[j];
+                            countFirst++;
+                        }
+                    }
+                }
+                node[i].firstpos[countFirst] = '\0';
+            }
+            if(!(node[node[i].left].nullable)){
+                int j = 0;
+                for(j = 0; node[node[i].left].firstpos[j] != '\0'; j++){
+                    node[i].firstpos[j] = node[node[i].left].firstpos[j];
+                }
+                node[i].firstpos[j] = '\0';
+            }
+            if(node[node[i].right].nullable){
+                int countLast = 0;
+                for(int j = 0; node[node[i].left].lastpos[j] != '\0'; j++){
+                    node[i].lastpos[j] = node[node[i].left].lastpos[j];
+                    countLast = j;
+                }
+                node[i].lastpos[countLast+1] = '\0';
+                for(int j = 0; node[node[i].right].lastpos[j] != '\0'; j++){
+                    for(int k = 0; node[i].lastpos[k]!= '\0'; k++){
+                        if(node[i].lastpos[k] == node[node[i].right].lastpos[j]){
+                            break;
+                        }
+                        else{
+                            node[i].lastpos[countLast+1] = node[node[i].right].lastpos[j];
+                            countLast++;
+                        }
+                    }
+                }
+                node[i].firstpos[countLast] = '\0';
+            }
+            if(!(node[node[i].right].nullable)){
+                int k = 0;
+                for(k = 0; node[node[i].right].lastpos[k] != '\0'; k++){
+                    node[i].lastpos[k] = node[node[i].right].lastpos[k];
+                }
+                node[i].lastpos[k] = '\0';
+            }
+        }
+        else{
+            node[i].firstpos[0] = '\0';
+            node[i].lastpos[0] = '\0';
+        }
+    }
+}
+
+
+void calculateFollow(struct Node *node, int expLength){
+    for(int i = 0; i < expLength; i++){
+        if(node[i].value == '*'){
+            for(int j = 0; node[i].lastpos[j] != '\0'; j++){
+                for(int  k = 0; k < expLength; k++){
+                    if(node[k].position > 0){
+                        if(node[k].position == node[i].lastpos[j]){
+                            for(int l = 0; node[i].firstpos[l] != '\0'; l++){
+                                node[k].followpos[l] = node[i].firstpos[l];
+                                node[k].followpos[l+1] = '\0';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if(node[i].value == '.'){
+            int count = 0;
+            for(int j = 0; node[node[i].left].lastpos[j] != '\0'; j++){
+                for(int  k = 0; k < expLength; k++){
+                    if(node[k].position > 0){
+                        if(node[k].position == node[node[i].left].lastpos[j]){
+                            for(int l = 0; node[node[i].right].firstpos[l-count] != '\0'; l++){
+                                while(node[k].followpos[l] != '\0'){
+                                    count++;
+                                    l++;
+                                }
+                                node[k].followpos[l] = node[node[i].right].firstpos[l-count];
+                                node[k].followpos[l+1] = '\0';
+                            }
+                            count = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+string topostfix(char* e){
+    char x;
+    // char tempArray[100];
+    string postfix= "";
+    while(*e != '\0')
+    {
+        if(isalnum(*e) || *e == '#' || *e == '-')
+            postfix += *e;
+        else if(*e == '(')
+            push(*e);
+        else if(*e == ')')
+        {
+            while((x = pop()) != '('){
+                postfix += x;
+            }
+        }
+        else
+        {
+            while(priority(stack[top]) >= priority(*e)){
+                postfix += pop();
+            }
+            push(*e);
+        }
+        e++;
+    }
+    while(top != -1)
+    {
+        postfix += pop();
+    }
+
+
+    return postfix;
+}
+
+string separate(string exp){
     int i,j=0;
     char temp[100];
-    for(i=0; i<100; i++){
+    string tempStr;
+    for(i=0; i < 10; i++){
         if(i==0){
             temp[j]=exp[i];
             j++;
         }
-
+        else if(exp[i]== '*'){
+            temp[j] = exp[i];
+            temp[j+1] = '-';
+            j+=2;
+        }
         else if((isalpha(exp[i]) && isalpha(exp[i-1])) || (isalpha(exp[i]) && exp[i-1]=='*') || (exp[i]=='#' && (isalpha(exp[i-1]) || exp[i-1]=='*'))){
             temp[j]='.';
             temp[j+1]=exp[i];
-            j=j+2;
+            j+=2;
         }
-
         else{
-        temp[j]=exp[i];
-        j++;
+            temp[j]=exp[i];
+            j++;
         }
-
     }
-    strcpy(exp,temp);
+    tempStr = temp;
+    return tempStr;
 }
 
-int * nullfplp(char exp[100]){
-    int l,i;
-    int nullb[100];
-    l=strlen(exp);
-    for(i=0; i<l; i++){
-        if(isalnum(exp[i]) || exp[i]=='#'){
-            nullb[i]=0;
-        }
-        else if(exp[i]=='*'){
-            nullb[i]=1;
-        }
-        else if(exp[i]=='+'){
-            if(nullb[i-2]==1 || nullb[i-1]==1){
-            nullb[i]=1;
-            }
-            else
-            nullb[i]=0;
-        }
-        else if(exp[i]=='.'){
-            if(nullb[i-2]==1 && nullb[i-1]==1){
-            nullb[i]=1;
-            }
-            else
-            nullb[i]=0;
-        }
-    }
-    
-    cout<<"Nullable:"<<endl;
-    for(i=0; i<l; i++){
-        cout<<exp[i]<<": ";
-        if(nullb[i]==0){
-            cout<<"False"<<endl;
-        }
-        else if(nullb[i]==1){
-            cout<<"True"<<endl;
-        }
-    }
-    
-	int fp[100][100], lp[100][100], pos[100];
-	int j=0,k=0, val=1;
-    for(i=0; i<l; i++){
-		if(isalnum(exp[i]) || exp[i]=='#'){
-			pos[i]=val;
-			val=val+1;
-		}
-	}
-    /*-------------------------------------------FIRSTPOS---------------------------------------------*/	
-	
-	for(i=0; i<l; i++){
-		if(isalnum(exp[i]) || exp[i]=='#'){
-			fp[i][0]=pos[i];
-		}
-		
-		else if(exp[i]=='+'){
-			j=0;k=0;
-			while((fp[i-2][j])!='\0'){
-				fp[i][k]=fp[i-2][j];
-				j=j+1;
-				k=k+1;
-			}
-			j=0;
-			while((fp[i-1][j])!='\0'){
-				fp[i][k]=fp[i-1][j];
-				j=j+1;
-				k=k+1;
-			}
-		}
-		else if(exp[i]=='*'){
-			for(j=0; j<l; j++){
-				fp[i][j]=fp[i-1][j];
-			}
-		}
-		else if(exp[i]=='.'){
-			if(nullb[i-2]==1){
-					j=0;k=0;
-				while((fp[i-2][j])!='\0'){
-					fp[i][k]=fp[i-2][j];
-					j=j+1;
-					k=k+1;
-				}
-				j=0;
-				while((fp[i-1][j])!='\0'){
-					fp[i][k]=fp[i-1][j];
-					j=j+1;
-					k=k+1;
-				}
-			}
-			else{
-			for(j=0; j<l; j++){
-				fp[i][j]=fp[i-2][j];
-			}
-			}
-		}
-	}
-	
-	cout<<endl<<"Firstpos:"<<endl;
-	for(i=0; i<l; i++){
-		cout<<exp[i]<<": ";
-        for(j=0; j<l; j++){
-        	if(fp[i][j]=='\0'){
-        		continue;
-			}
-			else
-        	cout<<fp[i][j]<<" ";
-		}
-		cout<<endl;
-    }
-    
-    /*-------------------------------------------LASTPOS---------------------------------------------*/
-    
-    for(i=0; i<l; i++){
-		if(isalnum(exp[i]) || exp[i]=='#'){
-			lp[i][0]=pos[i];
-		}
-		
-		else if(exp[i]=='+'){
-			j=0;k=0;
-			while((lp[i-2][j])!='\0'){
-				lp[i][k]=lp[i-2][j];
-				j=j+1;
-				k=k+1;
-			}
-			j=0;
-			while((lp[i-1][j])!='\0'){
-				lp[i][k]=lp[i-1][j];
-				j=j+1;
-				k=k+1;
-			}
-		}
-		else if(exp[i]=='*'){
-			for(j=0; j<l; j++){
-				lp[i][j]=lp[i-1][j];
-			}
-		}
-		else if(exp[i]=='.'){
-			if(nullb[i-1]==1){
-					j=0;k=0;
-				while((lp[i-2][j])!='\0'){
-					lp[i][k]=lp[i-2][j];
-					j=j+1;
-					k=k+1;
-				}
-				j=0;
-				while((fp[i-1][j])!='\0'){
-					lp[i][k]=lp[i-1][j];
-					j=j+1;
-					k=k+1;
-				}
-			}
-			else{
-			for(j=0; j<l; j++){
-				lp[i][j]=lp[i-1][j];
-			}
-			}
-		}
-	}
-	
-	cout<<endl<<"Lastpos:"<<endl;
-	for(i=0; i<l; i++){
-		cout<<exp[i]<<": ";
-        for(j=0; j<l; j++){
-        	if(lp[i][j]=='\0'){
-        		continue;
-			}
-			else
-        	cout<<lp[i][j]<<" ";
-		}
-		cout<<endl;
-    }
-    
-    /*-------------------------------------------FOLLOWPOS---------------------------------------------*/
-	
-	int folp[100][100];
-	int pt=0,n=0;
-	for(i=0;i<10;i++)
-	{
-		for(j=0;j<5;j++)
-		{
-			folp[i][j]='\0';
-		}
-	}
-	for(j=0;j<l;j++)
-	{
-		folp[j][0]=j+1;
-	}
-	while(exp[n]!='\0')
-	{
-		if(exp[n]=='*')
-		{
-			for(i=0;lp[n][i]!='\0';i++)
-			{
-				pt=0;
-				for(j=0;fp[n][j]!='\0';j++)
-				{
-					while(folp[(lp[n][i])-1][pt]!='\0')
-						pt++;
-					folp[(lp[n][i])-1][pt++]=fp[n][j];
-				}
-			}
-		}
-		if(exp[n]=='.')
-		{
-			for(i=0;lp[n-2][i]!='\0';i++)
-			{
-				pt=0;
-				for(j=0;fp[n-1][j]!='\0';j++)
-				{
-					while(folp[(lp[n-2][i])-1][pt]!='\0')
-						pt++;
-					folp[(lp[n-2][i])-1][pt++]=fp[n-1][j];
-				}
-			}
-		}n++;	
-	}
-	folp[l-1][1]='d';
-	
-	int alp=0;
-	for(i=0; i<l; i++){
-		if(isalnum(exp[i]) || exp[i]=='#')
-		alp++;
-	}
-	 	
-	cout<<endl<<"Followpos: "<<endl;
-	for(i=0;i<alp;i++)
-	{
-		cout<<folp[i][0]<<"\t";
-		for(j=1;j<5;j++)
-		{
-			if(folp[i][j]=='\0')
-				break;
-			cout<<folp[i][j]<<" ";
-		}
-		cout<<endl;
-	}
-	
-
-}
-
-
-int main(){
-    char exp[100], con[100], op[100];
-    int * nullb;
-	cout<< "Enter Regular Expression:";
-	cin>>exp;
+int main(){  
+    char exp[100];
+    string postfix;
+    int pos[20] ,i=0, j=1; 
+    cout<<"Enter the expresssion:";
+    cin>>exp;
     strcat(exp,"#");
-    tempCat(exp);
-    cout<<endl<<"Regular Expression with concatenation:"<<endl<<exp<<endl;
-    infixToPostfix(exp);
-    cout<<endl<<"The syntax tree is: "<<endl<<exp<<endl<<endl;
-    nullfplp(exp);
-    return 0;
-}
+    postfix = exp;
+    postfix = separate(postfix);
+    for(int i=0; i< postfix.length();i++){
+        exp[i]= postfix[i];
+    }
+    postfix = topostfix(exp);
+    for(int i=0; i<postfix.length(); i++){
+        if(isalpha(postfix[i]) || postfix[i] == '#'){
+            pos[i] = j;
+            j++;
+        }
+        else
+            pos[i] = 0;
+    }
+    cout<<endl;
+    struct Node arrNode[postfix.length()];
+    for(int i=0; i<postfix.length(); i++){
+        arrNode[i].value = postfix[i];
+        arrNode[i].position = pos[i];
+    }
+    for(int i = 0; i < postfix.length(); i++){
+        if(arrNode[i].value == '*' || arrNode[i].value == '.' || arrNode[i].value == '+'){
+            arrNode[i].left = i-2;
+            arrNode[i].right = i-1;
+        }
+        else{
+            arrNode[i].left = 0;
+            arrNode[i].right = 0;    
+        }
+    }
+    calculateNullable(arrNode, postfix.length());
+    calculatePos(arrNode, postfix.length());
+    for(int i = 0; i < postfix.length(); i++){
+        arrNode[i].followpos[0] = '\0';
+    }
+    calculateFollow(arrNode, postfix.length());
+    cout<<"node\tposition\tnullable\tfirstpos\tlastpos\t\tfollowpos\n";
+    for(int i = 0; i < postfix.length(); i++){
+        if(arrNode[i].value == '-'){
+            continue;
+        }
+        cout<<arrNode[i].value<<"\t"<<arrNode[i].position<<"\t";
+        if(arrNode[i].nullable){
+            cout<<"\ttrue";
+        }
+        else{
+            cout<<"\tfalse";
+        }
+        cout<<"\t\t";
+        for(int j = 0; arrNode[i].firstpos[j] != '\0'; j++)
+            cout<<arrNode[i].firstpos[j]<<",";
+        cout<<"\t\t";
+        for(int j = 0; arrNode[i].lastpos[j] != '\0'; j++)
+            cout<<arrNode[i].lastpos[j]<<",";
+        cout<<"\t\t";
+        for(int j = 0; arrNode[i].followpos[j] != '\0'; j++)
+            cout<<arrNode[i].followpos[j]<<",";    
+        cout<<endl;
+    }
+}  
