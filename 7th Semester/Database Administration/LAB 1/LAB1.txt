@@ -1,0 +1,212 @@
+Microsoft Windows [Version 10.0.17134.590]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Users\namko>sql
+'sql' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\namko>sqlplus
+
+SQL*Plus: Release 10.2.0.1.0 - Production on Thu Feb 21 10:51:11 2019
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 - Production
+
+SQL> create user ram identified by ram;
+
+User created.
+
+SQL> gran dba to ram;
+SP2-0734: unknown command beginning "gran dba t..." - rest of line ignored.
+SQL> grant dba to ram;
+
+Grant succeeded.
+
+SQL> connect ram
+Enter password:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> connect ram
+Enter password:
+Connected.
+SQL> create table emp(empid, empname, designation, salary, deptno, deptname);
+create table emp(empid, empname, designation, salary, deptno, deptname)
+                 *
+ERROR at line 1:
+ORA-02263: need to specify the datatype for this column
+
+
+SQL> create table emp(empid number(5), empname varchar(25), designation varchar(20), salary number(10,2), deptno number(5), deptname varchar2(20));
+
+Table created.
+
+SQL> insert into table emp(1, 'Ram', 'Teacher', 12000, 205, 'CSIT');
+insert into table emp(1, 'Ram', 'Teacher', 12000, 205, 'CSIT')
+            *
+ERROR at line 1:
+ORA-00903: invalid table name
+
+
+SQL> insert into emp(1, 'Ram', 'Teacher', 12000, 205, 'CSIT');
+insert into emp(1, 'Ram', 'Teacher', 12000, 205, 'CSIT')
+                *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> insert into emp values(1, 'Ram', 'Teacher', 12000, 205, 'CSIT');
+
+1 row created.
+
+SQL> insert into emp values(2, 'Shyam', 'Teacher', 15000, 206, 'BBA');
+
+1 row created.
+
+SQL> insert into emp values(3, 'Hari', 'Teacher', 15000, 206, 'BBA');
+
+1 row created.
+
+SQL> insert into emp values(&Id, '&Name', '&Des', &Sal, &Dno, '&Dname');
+Enter value for id: 4
+Enter value for name: Gita
+Enter value for des: Teacher
+Enter value for sal: 16000
+Enter value for dno: 205
+Enter value for dname: CSIT
+old   1: insert into emp values(&Id, '&Name', '&Des', &Sal, &Dno, '&Dname')
+new   1: insert into emp values(4, 'Gita', 'Teacher', 16000, 205, 'CSIT')
+
+1 row created.
+
+SQL> insert into emp values(&Id, '&Name', '&Des', &Sal, &Dno, '&Dname');
+Enter value for id: 5
+Enter value for name: Sita
+Enter value for des: Receptionist
+Enter value for sal: 12000
+Enter value for dno: 205
+Enter value for dname: CSIT
+old   1: insert into emp values(&Id, '&Name', '&Des', &Sal, &Dno, '&Dname')
+new   1: insert into emp values(5, 'Sita', 'Receptionist', 12000, 205, 'CSIT')
+
+1 row created.
+
+SQL> select * from emp
+  2  ;
+
+     EMPID EMPNAME                   DESIGNATION              SALARY     DEPTNO
+---------- ------------------------- -------------------- ---------- ----------
+DEPTNAME
+--------------------
+         1 Ram                       Teacher                   12000        205
+CSIT
+
+         2 Shyam                     Teacher                   15000        206
+BBA
+
+         3 Hari                      Teacher                   15000        206
+BBA
+
+
+     EMPID EMPNAME                   DESIGNATION              SALARY     DEPTNO
+---------- ------------------------- -------------------- ---------- ----------
+DEPTNAME
+--------------------
+         4 Gita                      Teacher                   16000        205
+CSIT
+
+         5 Sita                      Receptionist              12000        205
+CSIT
+
+
+SQL> select * from emp;
+
+     EMPID EMPNAME                   DESIGNATION              SALARY     DEPTNO
+---------- ------------------------- -------------------- ---------- ----------
+DEPTNAME
+--------------------
+         1 Ram                       Teacher                   12000        205
+CSIT
+
+         2 Shyam                     Teacher                   15000        206
+BBA
+
+         3 Hari                      Teacher                   15000        206
+BBA
+
+
+     EMPID EMPNAME                   DESIGNATION              SALARY     DEPTNO
+---------- ------------------------- -------------------- ---------- ----------
+DEPTNAME
+--------------------
+         4 Gita                      Teacher                   16000        205
+CSIT
+
+         5 Sita                      Receptionist              12000        205
+CSIT
+
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select ename,deptname from emp
+  2  ;
+select ename,deptname from emp
+       *
+ERROR at line 1:
+ORA-00904: "ENAME": invalid identifier
+
+
+
+
+SQL> select (ename,deptname) from emp;
+select (ename,deptname) from emp
+             *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> select empname, deptname from emp;
+
+EMPNAME                   DEPTNAME
+------------------------- --------------------
+Ram                       CSIT
+Shyam                     BBA
+Hari                      BBA
+Gita                      CSIT
+Sita                      CSIT
+
+SQL> select empname, deptname, &var from emp;
+Enter value for var: deptno
+old   1: select empname, deptname, &var from emp
+new   1: select empname, deptname, deptno from emp
+
+EMPNAME                   DEPTNAME                 DEPTNO
+------------------------- -------------------- ----------
+Ram                       CSIT                        205
+Shyam                     BBA                         206
+Hari                      BBA                         206
+Gita                      CSIT                        205
+Sita                      CSIT                        205
+
+SQL> select &var1, &var2, &var3 from emp where &condition;
+Enter value for var1: empname
+Enter value for var2: salary
+Enter value for var3: deptno
+Enter value for condition: salary>15000
+old   1: select &var1, &var2, &var3 from emp where &condition
+new   1: select empname, salary, deptno from emp where salary>15000
+
+EMPNAME                       SALARY     DEPTNO
+------------------------- ---------- ----------
+Gita                           16000        205
+
+SQL>
