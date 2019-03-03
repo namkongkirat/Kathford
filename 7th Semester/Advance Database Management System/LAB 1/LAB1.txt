@@ -1,0 +1,525 @@
+C:\Users\namko>sqlconnect
+'sqlconnect' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\namko>sqlplus
+
+SQL*Plus: Release 10.2.0.1.0 - Production on Sun Mar 3 11:42:20 2019
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 - Production
+
+SQL> create table students(id number(3), name varchar(100), age number(3));
+
+Table created.
+
+SQL> insert into students values(&id, &name, &age);
+Enter value for id: 1
+Enter value for name: Ram
+Enter value for age: 20
+old   1: insert into students values(&id, &name, &age)
+new   1: insert into students values(1, Ram, 20)
+insert into students values(1, Ram, 20)
+                               *
+ERROR at line 1:
+ORA-00984: column not allowed here
+
+
+SQL> insert into students values(&id, "&name", &age);
+Enter value for id: 1
+Enter value for name: Ram
+Enter value for age: 20
+old   1: insert into students values(&id, "&name", &age)
+new   1: insert into students values(1, "Ram", 20)
+insert into students values(1, "Ram", 20)
+                               *
+ERROR at line 1:
+ORA-00984: column not allowed here
+
+
+SQL> insert into students values(&id, '&name', &age);
+Enter value for id: 1
+Enter value for name: Ram
+Enter value for age: 20
+old   1: insert into students values(&id, '&name', &age)
+new   1: insert into students values(1, 'Ram', 20)
+
+1 row created.
+
+SQL> insert into students values(&id, '&name', &age);
+Enter value for id: 2
+Enter value for name: Hari
+Enter value for age: 21
+old   1: insert into students values(&id, '&name', &age)
+new   1: insert into students values(2, 'Hari', 21)
+
+1 row created.
+
+SQL> insert into students values(&id, '&name', &age);
+Enter value for id: 3
+Enter value for name: Gita
+Enter value for age: 19
+old   1: insert into students values(&id, '&name', &age)
+new   1: insert into students values(3, 'Gita', 19)
+
+1 row created.
+
+SQL> insert into students values(&id, '&name', &age);
+Enter value for id: 4
+Enter value for name: Sita
+Enter value for age: 23
+old   1: insert into students values(&id, '&name', &age)
+new   1: insert into students values(4, 'Sita', 23)
+
+1 row created.
+
+SQL> insert into students values(&id, '&name', &age);
+Enter value for id: 5
+Enter value for name: Shyam
+Enter value for age: 18
+old   1: insert into students values(&id, '&name', &age)
+new   1: insert into students values(5, 'Shyam', 18)
+
+1 row created.
+
+SQL> select * from student order by name;
+select * from student order by name
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from student order by age;
+select * from student order by age
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from students order by age;
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+         5
+Shyam
+        18
+
+         3
+Gita
+        19
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+
+         1
+Ram
+        20
+
+         2
+Hari
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+        21
+
+         4
+Sita
+        23
+
+
+SQL> select * from students order by name;
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+         3
+Gita
+        19
+
+         2
+Hari
+        21
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+
+         1
+Ram
+        20
+
+         5
+Shyam
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+        18
+
+         4
+Sita
+        23
+
+
+SQL> select * from students order by age asc, name asc;
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+         5
+Shyam
+        18
+
+         3
+Gita
+        19
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+
+         1
+Ram
+        20
+
+         2
+Hari
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+       AGE
+----------
+        21
+
+         4
+Sita
+        23
+
+
+SQL> alter table students modify name varchar2(15);
+
+Table altered.
+
+SQL> select * from students order by age asc, name asc;
+
+        ID NAME                   AGE
+---------- --------------- ----------
+         5 Shyam                   18
+         3 Gita                    19
+         1 Ram                     20
+         2 Hari                    21
+         4 Sita                    23
+
+SQL> select * from students order by age;
+
+        ID NAME                   AGE
+---------- --------------- ----------
+         5 Shyam                   18
+         3 Gita                    19
+         1 Ram                     20
+         2 Hari                    21
+         4 Sita                    23
+
+SQL> select * from student order by name;
+select * from student order by name
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from students order by name;
+
+        ID NAME                   AGE
+---------- --------------- ----------
+         3 Gita                    19
+         2 Hari                    21
+         1 Ram                     20
+         5 Shyam                   18
+         4 Sita                    23
+
+SQL> select * from students order by age des;
+select * from students order by age des
+                                    *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select * from students order by age desc;
+
+        ID NAME                   AGE
+---------- --------------- ----------
+         4 Sita                    23
+         2 Hari                    21
+         1 Ram                     20
+         3 Gita                    19
+         5 Shyam                   18
+
+SQL> create table category(catid number(2), catname(20));
+create table category(catid number(2), catname(20))
+                                              *
+ERROR at line 1:
+ORA-00902: invalid datatype
+
+
+SQL> create table category(catid number(2), catname varchar2(20));
+
+Table created.
+
+SQL> insert into category values(&catid, '&catname');
+Enter value for catid: 1
+Enter value for catname: Electronics
+old   1: insert into category values(&catid, '&catname')
+new   1: insert into category values(1, 'Electronics')
+
+1 row created.
+
+SQL> insert into category values(&catid, '&catname');
+Enter value for catid: 2
+Enter value for catname: Food
+old   1: insert into category values(&catid, '&catname')
+new   1: insert into category values(2, 'Food')
+
+1 row created.
+
+SQL> select * from category
+  2  ;
+
+     CATID CATNAME
+---------- --------------------
+         1 Electronics
+         2 Food
+
+SQL> alter table category modify catid number(2) primary key;
+
+Table altered.
+
+SQL> create table product(pid number(2) primary key, pname varchar2(20), price number(10), cat_id number(2), foreign key (cat_id) references category(catid));
+
+Table created.
+
+SQL> insert into product(&pid, '&pname', &price, &cat_id);
+Enter value for pid: 1
+Enter value for pname: Mobile
+Enter value for price: 15000
+Enter value for cat_id: 1
+old   1: insert into product(&pid, '&pname', &price, &cat_id)
+new   1: insert into product(1, 'Mobile', 15000, 1)
+insert into product(1, 'Mobile', 15000, 1)
+                    *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> insert into product values(&pid, '&pname', &price, &cat_id);
+Enter value for pid: 1
+Enter value for pname: Mobile
+Enter value for price: 15000
+Enter value for cat_id: 1
+old   1: insert into product values(&pid, '&pname', &price, &cat_id)
+new   1: insert into product values(1, 'Mobile', 15000, 1)
+
+1 row created.
+
+SQL> insert into product values(&pid, '&pname', &price, &cat_id);
+Enter value for pid: 2
+Enter value for pname: TV
+Enter value for price: 25000
+Enter value for cat_id: 1
+old   1: insert into product values(&pid, '&pname', &price, &cat_id)
+new   1: insert into product values(2, 'TV', 25000, 1)
+
+1 row created.
+
+SQL> insert into product values(&pid, '&pname', &price, &cat_id);
+Enter value for pid: 3
+Enter value for pname: Wai Wai
+Enter value for price: 20
+Enter value for cat_id: 2
+old   1: insert into product values(&pid, '&pname', &price, &cat_id)
+new   1: insert into product values(3, 'Wai Wai', 20, 2)
+
+1 row created.
+
+SQL> insert into product values(&pid, '&pname', &price, &cat_id);
+Enter value for pid: 4
+Enter value for pname: Shoes
+Enter value for price: 2000
+Enter value for cat_id: NULL
+old   1: insert into product values(&pid, '&pname', &price, &cat_id)
+new   1: insert into product values(4, 'Shoes', 2000, NULL)
+
+1 row created.
+
+SQL> select * from product.
+  2  ;
+
+*
+ERROR at line 2:
+ORA-00903: invalid table name
+
+
+SQL> select * from product;
+
+       PID PNAME                     PRICE     CAT_ID
+---------- -------------------- ---------- ----------
+         1 Mobile                    15000          1
+         2 TV                        25000          1
+         3 Wai Wai                      20          2
+         4 Shoes                      2000
+
+SQL> create table customer(cid number(2) primary key, cname varchar2(20));
+
+Table created.
+
+SQL> create table purchase(c_id number(2), p_id number(2), qty number(4), foreign key (c_id) references customer(cid), foreign key (p_id) references product(pid));
+
+Table created.
+
+SQL> select pname, catname from product left join category on cat_id=catid;
+
+PNAME                CATNAME
+-------------------- --------------------
+Mobile               Electronics
+TV                   Electronics
+Wai Wai              Food
+Shoes
+
+SQL> select pname, catname from category right join product on cat_id=catid;
+
+PNAME                CATNAME
+-------------------- --------------------
+Mobile               Electronics
+TV                   Electronics
+Wai Wai              Food
+Shoes
+
+SQL> insert into customer values(&cid, '&cname');
+Enter value for cid: 1
+Enter value for cname: Ram
+old   1: insert into customer values(&cid, '&cname')
+new   1: insert into customer values(1, 'Ram')
+
+1 row created.
+
+SQL> insert into customer values(&cid, '&cname');
+Enter value for cid: 2
+Enter value for cname: shyam
+old   1: insert into customer values(&cid, '&cname')
+new   1: insert into customer values(2, 'shyam')
+
+1 row created.
+
+SQL> insert into customer values(&cid, '&cname');
+Enter value for cid: 3
+Enter value for cname: Hari
+old   1: insert into customer values(&cid, '&cname')
+new   1: insert into customer values(3, 'Hari')
+
+1 row created.
+
+SQL> insert into purchase values(&c_id, &p_id, &qty);
+Enter value for c_id: 1
+Enter value for p_id: 1
+Enter value for qty: 1
+old   1: insert into purchase values(&c_id, &p_id, &qty)
+new   1: insert into purchase values(1, 1, 1)
+
+1 row created.
+
+SQL> insert into purchase values(&c_id, &p_id, &qty);
+Enter value for c_id: 1
+Enter value for p_id: 4
+Enter value for qty: 2
+old   1: insert into purchase values(&c_id, &p_id, &qty)
+new   1: insert into purchase values(1, 4, 2)
+
+1 row created.
+
+SQL> insert into purchase values(&c_id, &p_id, &qty);
+Enter value for c_id: 3
+Enter value for p_id: 2
+Enter value for qty: 1
+old   1: insert into purchase values(&c_id, &p_id, &qty)
+new   1: insert into purchase values(3, 2, 1)
+
+1 row created.
+
+SQL> insert into purchase values(&c_id, &p_id, &qty);
+Enter value for c_id: 2
+Enter value for p_id: 3
+Enter value for qty: 5
+old   1: insert into purchase values(&c_id, &p_id, &qty)
+new   1: insert into purchase values(2, 3, 5)
+
+1 row created.
+
+SQL> select pname, catname from customer (((inner join purchase on cid=c_id) inner join product on pid=p_id)left join category on catid=cat_id) where cname='Ram';
+select pname, catname from customer (((inner join purchase on cid=c_id) inner join product on pid=p_id)left join category on catid=cat_id) where cname='Ram'
+                                    *
+ERROR at line 1:
+ORA-00933: SQL command not properly ended
+
+
+SQL> select pname, catname from customer inner join purchase on cid=c_id inner join product on pid=p_id left join category on catid=cat_id where cname='Ram';
+
+PNAME                CATNAME
+-------------------- --------------------
+Mobile               Electronics
+Shoes
+
+SQL> select pname, catname, price from customer inner join purchase on cid=c_id inner join product on pid=p_id left join category on catid=cat_id where cname='Ram';
+
+PNAME                CATNAME                   PRICE
+-------------------- -------------------- ----------
+Mobile               Electronics               15000
+Shoes                                           2000
+
+SQL> select pname, catname, price*qty from customer inner join purchase on cid=c_id inner join product on pid=p_id left join category on catid=cat_id where cname='Ram';
+
+PNAME                CATNAME               PRICE*QTY
+-------------------- -------------------- ----------
+Mobile               Electronics               15000
+Shoes                                           4000
+
+SQL> select pname, catname, price*qty as paid from customer inner join purchase on cid=c_id inner join product on pid=p_id left join category on catid=cat_id where cname='Ram';
+
+PNAME                CATNAME                    PAID
+-------------------- -------------------- ----------
+Mobile               Electronics               15000
+Shoes                                           4000
+
+SQL>
