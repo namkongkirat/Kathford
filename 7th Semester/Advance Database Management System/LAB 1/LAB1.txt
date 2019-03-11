@@ -328,7 +328,7 @@ SQL> alter table category modify catid number(2) primary key;
 Table altered.
 
 SQL> create table product(pid number(2) primary key, pname varchar2(20), price number(10), cat_id number(2), foreign key (cat_id) references category(catid));
-
+create table sales(sid number(2) primary key,  cat_id number(2), foreign key (cat_id) references category(catid),c_id number(2), foreign key (c_id) references customer(cid), p_id number(2), foreign key (p_id) references product(pid));
 Table created.
 
 SQL> insert into product(&pid, '&pname', &price, &cat_id);
