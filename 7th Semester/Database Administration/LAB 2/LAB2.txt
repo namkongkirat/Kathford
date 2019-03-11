@@ -1,0 +1,63 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Academics\Codes\Kathford> sqlplus
+
+SQL*Plus: Release 10.2.0.1.0 - Production on Thu Mar 7 10:59:23 2019
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 - Production
+
+SQL> create table student(crn number(5) primary key, name varchar2(25), email varchar2(30), mobile number(10), parentname varchar2(25));
+
+Table created.
+
+SQL> create table department(deptid number(5) primary key, dname varchar2(20), capacity number(5));
+
+Table created.
+
+SQL> create table enroll(eid number(5) primary key, crn number(5), foreign key (crn) references student(crn), deptid number(5), foreign key (deptid) references department(deptid), enrolldate date);
+
+Table created.
+
+SQL> create table accounts(aid number(5) primary key, crn number(5), foreign key (crn) references student(crn), feepaid number(10,2), totalfee number(10,2), paydate date);
+
+Table created.
+
+SQL> alter table department modify dname varchar2(20) check(dname=upper(dname));
+
+Table altered.
+
+
+SQL> create view view1 as select name, mobile, email from student;
+
+View created.
+
+
+SQL> create view view2 as
+  2  select s.name as name, d.dname as dname
+  3  from student s, department d, enroll e
+  4  where s.crn = e.crn and d.deptid = e.deptid;
+
+View created.
+
+SQL> create view view3 as
+  2  select s.name as name, d.dname as dname, e.enrolldate as enrolldate
+  3  from student s, department d, enroll e
+  4  where s.crn = e.crn and d.deptid = e.deptid;
+
+View created.
+
+SQL> create view view4 as
+  2  select s.name as name, d.dname as dname, a.feepaid as feepaid
+  3  from student s, department d, enroll e, accounts a
+  4  where s.crn = e.crn and s.crn=a.crn and d.deptid = e.deptid;
+
+View created.
+
+SQL>
