@@ -68,39 +68,6 @@ SQL> create view salesrecord as select s.salesperson, c.cname from sales s inner
 
 View created.
 
-
-SQL> select * from salesrecord;
-
-SALESPERSON               CNAME
-------------------------- --------------------
-                          Ram
-                          Shyam
-                          Hari
-
-SQL> select * from sales;
-
-       SID     CAT_ID       C_ID       P_ID SALESPERSON
----------- ---------- ---------- ---------- -------------------------
-         1          1          1          1
-         2          2          2          3
-         3          1          3          2
-
-SQL> update sales set salesperson='Aurora' where sid=1;
-
-1 row updated.
-
-SQL> update sales set salesperson='Eudora' where sid=2;
-
-1 row updated.
-
-SQL> update sales set salesperson='Kimmy' where sid=3;
-
-1 row updated.
-
-SQL> commit;
-
-Commit complete.
-
 SQL> select * from salesrecord;
 
 SALESPERSON               CNAME
@@ -108,104 +75,6 @@ SALESPERSON               CNAME
 Aurora                    Ram
 Eudora                    Shyam
 Kimmy                     Hari
-
-SQL> tasc sales;
-SP2-0042: unknown command "tasc sales" - rest of line ignored.
-SQL> desc sales;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- SID                                       NOT NULL NUMBER(2)
- CAT_ID                                             NUMBER(2)
- C_ID                                               NUMBER(2)
- P_ID                                               NUMBER(2)
- SALESPERSON                                        VARCHAR2(25)
-
-
-
-
-
-SQL> select * from salesrecord;
-
-no rows selected
-
-SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid left join purchase q on c.cid=q.c_id left join product p on p.pid=q.p_id;
-
-View created.
-
-SQL> select * from salesrecord;
-SELLER                    CUSTOMER             PRODUCT                    PAID
-------------------------- -------------------- -------------------- ----------
-Kimmy                     Hari
-Aurora                    Ram
-Eudora                    Shyam
-
-SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid inner join purchase q on c.cid=q.c_id left join product p on p.pid=q.p_id;
-
-View created.
-
-SQL> select * from salesrecord;
-no rows selected
-
-SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid inner join purchase q on c.cid=q.c_id inner join product p on p.pid=q.p_id;
-
-View created.
-
-SQL> select * from salesrecord;
-no rows selected
-
-SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid inner join purchase q on c.cid=q.c_id inner join product p on p.pid=q.p_id;
-
-View created.
-
-SQL> select * from salesrecord;
-no rows selected
-
-SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid inner join purchase q on c.cid=q.c_id left join product p on p.pid=q.p_id;
-
-View created.
-
-SQL> select * from salesrecord;
-no rows selected
-
-SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid left join purchase q on c.cid=q.c_id left join product p on p.pid=q.p_id;
-
-View created.
-
-SQL> select * from salesrecord;
-SELLER                    CUSTOMER             PRODUCT                    PAID
-------------------------- -------------------- -------------------- ----------
-Kimmy                     Hari
-Aurora                    Ram
-Eudora                    Shyam
-
-SQL> desc product Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- PID                                       NOT NULL NUMBER(2)
- PNAME                                              VARCHAR2(20)
- PRICE                                              NUMBER(10)
- CAT_ID                                             NUMBER(2)
-
-SQL> desc purchase;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- C_ID                                               NUMBER(2)
- P_ID                                               NUMBER(2)
- QTY                                                NUMBER(4)
-
-SQL> desc sales;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- SID                                       NOT NULL NUMBER(2)
- CAT_ID                                             NUMBER(2)
- C_ID                                               NUMBER(2)
- P_ID                                               NUMBER(2)
- SALESPERSON                                        VARCHAR2(25)
-
-SQL> desc customer;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- CID                                       NOT NULL NUMBER(2)
- CNAME                                              VARCHAR2(20)
 
 SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid left join purchase q on c.cid=q.c_id left join product p on s.cat_id=p.cat_id;
 
@@ -250,4 +119,28 @@ Kimmy                     Hari                 TV
 Aurora                    Ram                  TV
 Eudora                    Shyam                Wai Wai
 
-SQL>
+SQL> select * from purchase;
+
+      C_ID       P_ID        QTY
+---------- ---------- ----------
+         1          1          1
+         1          4          2
+         3          2          1
+         2          3          5
+
+SQL> create or replace view salesrecord as select s.salesperson as seller, c.cname as customer, p.pname as product, p.price*q.qty as paid from sales s inner join customer c on s.c_id=c.cid left join product p on s.cat_id=p.cat_id left join purchase q on s.p_id=q.p_id;
+
+View created.
+
+SQL> select * from salesrecord;
+SELLER                    CUSTOMER             PRODUCT                    PAID
+------------------------- -------------------- -------------------- ----------
+Kimmy                     Hari                 Mobile                    15000
+Aurora                    Ram                  Mobile                    15000
+Kimmy                     Hari                 TV                        25000
+Aurora                    Ram                  TV                        25000
+Eudora                    Shyam                Wai Wai                     100
+
+SQL> commit;
+
+Commit complete.
