@@ -1,0 +1,170 @@
+SQL> connect a;
+Enter password:
+ERROR:
+ORA-01045: user A lacks CREATE SESSION privilege; logon denied
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> grant connect to a;
+
+Grant succeeded.
+
+SQL> connect a;
+Enter password:
+Connected.
+SQL> select * from ram.student;
+select * from ram.student
+                  *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> grant select on ram.student to a;
+
+Grant succeeded.
+
+SQL> connect a;
+Enter password:
+Connected.
+SQL> select * from ram.student;
+
+       CRN NAME                      EMAIL                              MOBILE PARENTNAME
+---------- ------------------------- ------------------------------ ---------- -------------------------
+         1 Ram                       ram@gmail.com                   987698789 Guru
+         2 Shyam                     shyam@gmail.com                 923498789 Manu
+         3 Hari                      hari@gmail.com                  923492369 Laxman
+         4 Gita                      gita@gmail.com                  982692523 Kumar
+
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> grant connect to b;
+
+Grant succeeded.
+
+SQL> grant connect to c;
+
+Grant succeeded.
+
+SQL> grant connect to d;
+
+Grant succeeded.
+
+SQL> connect b;
+Enter password:
+Connected.
+SQL> insert into ram.student values (5,'Sita','sita@gmail.com',963728573,'Bisal');
+insert into ram.student values (5,'Sita','sita@gmail.com',963728573,'Bisal')
+                *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> grant insert on ram.student to b;
+
+Grant succeeded.
+
+SQL> connect b;
+Enter password:
+Connected.
+SQL> insert into ram.student values (5,'Sita','sita@gmail.com',963728573,'Bisal');
+
+1 row created.
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> select * from student;
+
+       CRN NAME                      EMAIL                              MOBILE PARENTNAME
+---------- ------------------------- ------------------------------ ---------- -------------------------
+         1 Ram                       ram@gmail.com                   987698789 Guru
+         2 Shyam                     shyam@gmail.com                 923498789 Manu
+         3 Hari                      hari@gmail.com                  923492369 Laxman
+         4 Gita                      gita@gmail.com                  982692523 Kumar
+         5 Sita                      sita@gmail.com                  963728573 Bisal
+
+SQL> connect c;
+Enter password:
+Connected.
+SQL> update ram.student set parentname='Gitendra' where crn=5;
+update ram.student set parentname='Gitendra' where crn=5
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> grant update on ram.student to c;
+
+Grant succeeded.
+
+SQL> connect c;
+Enter password:
+Connected.
+SQL> update ram.student set parentname='Gitendra' where crn=5;
+
+1 row updated.
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> select * from student;
+
+       CRN NAME                      EMAIL                              MOBILE PARENTNAME
+---------- ------------------------- ------------------------------ ---------- -------------------------
+         1 Ram                       ram@gmail.com                   987698789 Guru
+         2 Shyam                     shyam@gmail.com                 923498789 Manu
+         3 Hari                      hari@gmail.com                  923492369 Laxman
+         4 Gita                      gita@gmail.com                  982692523 Kumar
+         5 Sita                      sita@gmail.com                  963728573 Gitendra
+
+SQL> connect d;
+Enter password:
+Connected.
+SQL> delete from ram.student where crn=5;
+delete from ram.student where crn=5
+                *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> grant delete on ram.student to d;
+
+Grant succeeded.
+
+SQL> connect d;
+Enter password:
+Connected.
+SQL> delete from ram.student where crn=5;
+
+1 row deleted.
+
+SQL> connect ram;
+Enter password:
+Connected.
+SQL> select * from student;
+
+       CRN NAME                      EMAIL                              MOBILE PARENTNAME
+---------- ------------------------- ------------------------------ ---------- -------------------------
+         1 Ram                       ram@gmail.com                   987698789 Guru
+         2 Shyam                     shyam@gmail.com                 923498789 Manu
+         3 Hari                      hari@gmail.com                  923492369 Laxman
+         4 Gita                      gita@gmail.com                  982692523 Kumar
+
+SQL>
