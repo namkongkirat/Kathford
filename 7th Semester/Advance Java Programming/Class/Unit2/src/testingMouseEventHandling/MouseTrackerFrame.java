@@ -35,8 +35,10 @@ public class MouseTrackerFrame extends JFrame{
         mousePanel.addMouseListener(handler);
     }    
     private class MouseHandler implements MouseListener{
-            
-            public void mouseClicked(MouseEvent event){
+            MouseMotionListener{
+        
+            public vo
+                    id mouseClicked(MouseEvent event){
                 statusBar.setText(String.format("Clicked at [%d,%d]", event.getX(), event.getY()));
             }
             
@@ -44,8 +46,6 @@ public class MouseTrackerFrame extends JFrame{
             public void mouseExited(){}
             public void mousePressed(){}
             public void mouseReleased(){}
-            
+        }   
         }
     }
-    
-}
