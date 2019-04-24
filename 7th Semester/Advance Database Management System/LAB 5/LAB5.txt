@@ -1,0 +1,47 @@
+SQL> create table student(crn number(5) primary key, name varchar2(25), sub1 number(10), sub2 number(10), sub3 number(10), total number(10), per number(10,2);
+
+Table created.
+
+SQL> insert all
+into student values (1,'Ram',84,97,73,0,0);
+into student values (2,'Shyam',14000)
+into student values (3,'Hari',13000)
+into student values (4,'Gita',12400)
+select 1 from dual;
+
+
+
+SQL> CREATE OR REPLACE TRIGGER student_total_per
+BEFORE INSERT ON student
+FOR EACH ROW
+BEGIN
+SET NEW.total = NEW.sub1 + NEW.sub2 + NEW.sub3, NEW.per = NEW.total / 3;
+END;
+/
+
+SQL> CREATE OR REPLACE TRIGGER student_update
+BEFORE INSERT ON student
+FOR EACH ROW
+BEGIN
+    IF (sub1==NEW.sub1)
+SET NEW.total = NEW.sub1 + NEW.sub2 + NEW.sub3, NEW.per = NEW.total / 3;
+END;
+/
+
+=====dept value insert=====
+insert into dept values (1,'CSIT',0);
+
+
+=====INSERT TRIGGER=====
+CREATE TRIGGER trg_emp_insert
+AFTER INSERT ON trg_emp_insert
+FOR EACH ROW
+BEGIN
+UPDATE dept SET total_sal = total_sal + NEW.sal
+END
+
+=====emp value insert=====
+insert into emp values (1,'Ram',1,13000);
+
+
+
