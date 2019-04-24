@@ -1,0 +1,27 @@
+
+SQL> connect nam;
+Enter password:
+Connected.
+SQL> create table employee(eid number(2), ename varchar2(25), namager_id number(3));
+
+Table created.
+
+SQL> insert all
+  2  into employee values(1, 'Ram', NULL)
+  3  into employee values(2, 'Shyam', 1)
+  4  into employee values(3, 'Hari', 1)
+  5  into employee values(4, 'Gopal', 3)
+  6  select 1 from dual;
+
+4 rows created.
+
+SQL> select a.ename as Employee, b.ename as Manager from employee a left join employee b on a.namager_id=b.eid;
+
+EMPLOYEE                  MANAGER
+------------------------- -------------------------
+Hari                      Ram
+Shyam                     Ram
+Gopal                     Hari
+Ram
+
+SQL>
