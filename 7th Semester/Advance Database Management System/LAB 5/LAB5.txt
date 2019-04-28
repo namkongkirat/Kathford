@@ -9,7 +9,7 @@ into student values (3,'Hari',13000)
 into student values (4,'Gita',12400)
 select 1 from dual;
 
-
+create table dept(did number(5) primary key, dname varchar2(25), total_sal number(10);
 
 SQL> CREATE OR REPLACE TRIGGER student_total_per
 BEFORE INSERT ON student
@@ -28,20 +28,79 @@ SET NEW.total = NEW.sub1 + NEW.sub2 + NEW.sub3, NEW.per = NEW.total / 3;
 END;
 /
 
+=====Oracle INSERT TRIGGER=====
+CREATE OR REPLACE TRIGGER trg_emp_insert
+AFTER INSERT ON emp
+FOR EACH ROW
+BEGIN
+UPDATE dept SET total_sal = total_sal + :NEW.sal
+WHERE did=:new.did;
+END;
+/
+
+
+
+
+
+
+
+
+
+SQL> create table dept(did number(5) primary key, dname varchar2(25), total_sal number(10));
+
+Table created.
+
+
+SQL> create table emp(eid number(5) primary key, ename varchar2(25), did number(5) references dept(did), sal number(10));
+
+Table created.
+
+
+
+
+
 =====dept value insert=====
 insert into dept values (1,'CSIT',0);
 
 
 =====INSERT TRIGGER=====
-CREATE TRIGGER trg_emp_insert
-AFTER INSERT ON trg_emp_insert
+CREATE OR REPLACE TRIGGER trg_emp_insert
+AFTER INSERT ON emp
 FOR EACH ROW
 BEGIN
-UPDATE dept SET total_sal = total_sal + NEW.sal
-END
+UPDATE dept SET total_sal = total_sal + :NEW.sal
+WHERE did=:new.did
+END;
 
 =====emp value insert=====
 insert into emp values (1,'Ram',1,13000);
+insert into emp values (2,'Hari',1,15000);
+insert into emp values (3,'Shyam',1,14000);
+
+=====DELETE TRIGGER=====
+CREATE OR REPLACE TRIGGER trg_emp_delete
+AFTER DELETE ON emp
+FOR EACH ROW
+BEGIN
+UPDATE dept SET total_sal = total_sal - OLD.sal
+END
+
+=====emp value delete=====
+DELETE FROM emp WHERE eid=2;
 
 
+=====UPDATE TRIGGER=====
+DELIMITER //
+CREATE TRIGGER trg_emp_update
+AFTER UPDATE ON emp
+FOR EACH ROW
+BEGIN
+UPDATE dept SET total_sal = total_sal - OLD.sal
+WHERE did = OLD.d_id;
+UPDATE dept SET total_sal = total_sal + NEW.sal
+WHERE did = NEW.d_id;
+END;
+//
 
+=====emp value update=====
+UPDATE emp SET sal=18000 WHERE eid=3;
