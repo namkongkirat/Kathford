@@ -1,0 +1,27 @@
+=============Sequence Creation=============
+CREATE SEQUENCE seq_dept_did;
+
+
+==============Trigger Creation==============
+CREATE OR REPLACE TRIGGER trg_dept_insert
+BEFORE INSERT ON dept
+FOR EACH ROW
+BEGIN
+    if :new.did is null then
+       select seq_dept_did.nextval
+       into :new.did
+       from dual;
+    end if;
+END;
+/
+
+=============Inserting Values==============
+SQL> insert into dept values (NULL,'CSTI',0);
+
+1 row created.
+
+SQL> select * from dept;
+
+       DID DNAME                      TOTAL_SAL
+---------- ------------------------- ----------
+         1 CSTI                               0
