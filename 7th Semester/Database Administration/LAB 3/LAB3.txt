@@ -167,4 +167,7 @@ SQL> select * from student;
          3 Hari                      hari@gmail.com                  923492369 Laxman
          4 Gita                      gita@gmail.com                  982692523 Kumar
 
-SQL>
+SQL> create index index2 on student (email);
+
+Index created.
+
