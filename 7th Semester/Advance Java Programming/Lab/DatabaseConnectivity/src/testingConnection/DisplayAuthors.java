@@ -5,14 +5,7 @@
  */
 package testingConnection;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Savepoint;
+import java.sql.*;
 /**
  *
  * @author namko
@@ -30,41 +23,41 @@ public class DisplayAuthors {
             connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement("INSERT INTO authors VALUES(?, ?, ?)");
             
-            pstmt.setInt(1,5);
+            pstmt.setInt(1,4);
             pstmt.setString(2, "Srijal");
             pstmt.setString(3,"KC");
             pstmt.addBatch();
             
-            Savepoint svpt = connection.setSavepoint();
+           // Savepoint svpt = connection.setSavepoint();
             
-            pstmt.setInt(1,7);
+            pstmt.setInt(1,5);
             pstmt.setString(2, "Neha");
             pstmt.setString(3,"Adhikari");
             pstmt.addBatch();
             
             int [] updateCounts = pstmt.executeBatch();
-            connection.rollback(svpt);
-            connection.commit();
+            //connection.rollback(svpt);
+            connection.commit(); 
             
             
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             resultSet = statement.executeQuery("SELECT * FROM authors");
             
-            /*
-            //=============Update Value (single row)=============//
-            while(resultSet.next()){
+            
+               //=============Update Value (single row)=============//
+            /*while(resultSet.next()){
                 resultSet.updateString("lastname","Karki");
                 resultSet.updateRow();
             }
-            resultSet.beforeFirst();
+            resultSet.beforeFirst(); */
             
             
-            //=============Insert Value=============//
-            resultSet.moveToInsertRow();
-            resultSet.updateInt("sn",3);
-            resultSet.updateString("firstname","Ruxana");
-            resultSet.updateString("lastname","Maharjan");
-            resultSet.insertRow();*/
+             //=============Insert Value=============//
+            /*resultSet.moveToInsertRow();
+            resultSet.updateInt("sn",4);
+            resultSet.updateString("firstname","Anil");
+            resultSet.updateString("lastname","KC");
+            resultSet.insertRow(); */
             
             
             resultSet.beforeFirst();
