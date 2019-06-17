@@ -25,3 +25,4 @@ SQL> select * from dept;
        DID DNAME                      TOTAL_SAL
 ---------- ------------------------- ----------
          1 CSTI                               0
+

@@ -515,7 +515,8 @@ PNAME                CATNAME               PRICE*QTY
 Mobile               Electronics               15000
 Shoes                                           4000
 
-SQL> select pname, catname, price*qty as paid from customer inner join purchase on cid=c_id inner join product on pid=p_id left join category on catid=cat_id where cname='Ram';
+SQL> 
+
 
 PNAME                CATNAME                    PAID
 -------------------- -------------------- ----------

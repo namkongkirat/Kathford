@@ -33,21 +33,6 @@ SQL> desc students
  SNAME                                              VARCHAR2(50)
  AGE                                                NUMBER(3)
 
-SQL> Create table student_address(
-  2
-SQL>
-SQL>
-SQL> Create table std_address(
-  2  stid number(3),
-  3  addr varchar(50),
-  4  vst date,
-  5  vet date,
-  6  foreign key(stid) references students(id)
-  7  );
-foreign key(stid) references students(id)
-                                      *
-ERROR at line 6:
-ORA-02270: no matching unique or primary key for this column-list
 
 
 SQL> Create table std(
@@ -68,15 +53,6 @@ SQL> Create table std_address(
 
 Table created.
 
-SQL> Insert all
-  2  into std values (1, 'Ashish', 22)
-  3  into std values (2, 'Bishal' , 21)
-  4  into std values (3, 'Parish' , 20)
-  5  ;
-
-*
-ERROR at line 5:
-ORA-00928: missing SELECT keyword
 
 
 SQL> Insert all
@@ -91,34 +67,7 @@ SQL> Insert all
   2  \
   3
 SQL>
-SQL>
-SQL>
-SQL> Insert into std_address values (1, 'Kathmandu', '2019-05-05', '2019-05-10');
-Insert into std_address values (1, 'Kathmandu', '2019-05-05', '2019-05-10')
-                                                *
-ERROR at line 1:
-ORA-01861: literal does not match format string
 
-
-SQL> Insert into std_address values (1, 'Kathmandu', '2019/05/05', '2019/05/10');
-Insert into std_address values (1, 'Kathmandu', '2019/05/05', '2019/05/10')
-                                                *
-ERROR at line 1:
-ORA-01861: literal does not match format string
-
-
-SQL> Insert into std_address values (1, 'Kathmandu', '05/05/2019', '10/05/2019');
-Insert into std_address values (1, 'Kathmandu', '05/05/2019', '10/05/2019')
-                                                *
-ERROR at line 1:
-ORA-01843: not a valid month
-
-
-SQL> Insert into std_address values (1, 'Kathmandu', '05-05-2019', '10-05-2019');
-Insert into std_address values (1, 'Kathmandu', '05-05-2019', '10-05-2019')
-                                                *
-ERROR at line 1:
-ORA-01843: not a valid month
 
 
 SQL> Insert into std_address values (1, 'Kathmandu', '01-MAY-2019', '10-MAY-2019');
@@ -132,12 +81,6 @@ SQL> Insert into std_address values (2, 'Bhaktapur', '01-MAY-2019', '20-MAY-2019
 SQL> Insert into std_address values (3, 'Lalitpur', '08-JAN-2019', '1-MAY-2019');
 
 1 row created.
-
-SQL> Select s.std_id, s.sname, sa.addr from std s left join std_address sa on s.std_id = sa.stid and trunk(SYSDATE) between sa.vst and sa.vet;
-Select s.std_id, s.sname, sa.addr from std s left join std_address sa on s.std_id = sa.stid and trunk(SYSDATE) between sa.vst and sa.vet
-                                                                                                *
-ERROR at line 1:
-ORA-00904: "TRUNK": invalid identifier
 
 
 SQL> select sysdate from dual
@@ -200,28 +143,6 @@ SQL> select * from std_address;
          2 Bhaktapur                                          01-MAY-19 20-MAY-19
          3 Lalitpur                                           08-JAN-19 01-MAY-19
 
-SQL> Insert all
-  2  into std values (4, 'Sameer', 20)
-  3  into std_address(4, 'Kavre', to_date('2019-04-01', 'yyyy-mm-dd'), to_date('2019-05-30', 'yyyy-mm-dd'))
-  4  select 1 from dual;
-into std_address(4, 'Kavre', to_date('2019-04-01', 'yyyy-mm-dd'), to_date('2019-05-30', 'yyyy-mm-dd'))
-                 *
-ERROR at line 3:
-ORA-01747: invalid user.table.column, table.column, or column specification
-
-
-SQL> Insert into std_address(4, 'Kavre', to_date('2019-04-01', 'yyyy-mm-dd'), to_date('2019-05-30', 'yyyy-mm-dd'));
-Insert into std_address(4, 'Kavre', to_date('2019-04-01', 'yyyy-mm-dd'), to_date('2019-05-30', 'yyyy-mm-dd'))
-                        *
-ERROR at line 1:
-ORA-00928: missing SELECT keyword
-
-
-SQL> Insert into std_address values(4, 'Kavre', to_date('2019-04-01', 'yyyy-mm-dd'), to_date('2019-05-30', 'yyyy-mm-dd'));
-Insert into std_address values(4, 'Kavre', to_date('2019-04-01', 'yyyy-mm-dd'), to_date('2019-05-30', 'yyyy-mm-dd'))
-*
-ERROR at line 1:
-ORA-02291: integrity constraint (ASHISH.SYS_C004807) violated - parent key not found
 
 
 SQL> Insert into std values (4, 'Sameer', 20)
