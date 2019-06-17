@@ -1,0 +1,128 @@
+Microsoft Windows [Version 10.0.17134.829]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Users\hp>sqlplus
+
+SQL*Plus: Release 10.2.0.1.0 - Production on Mon Jun 17 16:17:36 2019
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+Enter user-name: sys as sysdba
+Enter password:
+
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 - Production
+
+SQL> select log_mode from v$database;
+
+LOG_MODE
+------------
+ARCHIVELOG
+
+SQL> shutdown immediate;
+Database closed.
+Database dismounted.
+ORACLE instance shut down.
+SQL> startup mount;
+ORACLE instance started.
+
+Total System Global Area  805306368 bytes
+Fixed Size                  1289996 bytes
+Variable Size             209715444 bytes
+Database Buffers          591396864 bytes
+Redo Buffers                2904064 bytes
+Database mounted.
+
+SQL> alter database open;
+
+Database altered.
+
+
+SQL> create tablespace newcheckdata datafile 'G:\newcheckdata.dbf' size 10M;
+
+Tablespace created.
+
+
+SQL> create table dummytest
+  2  (
+  3  dummy varchar2(30)
+  4  );
+
+Table created.
+
+SQL> select * from dummytest;
+
+no rows selected
+
+SQL> insert into dummytest values ('Before Backup');
+
+1 row created.
+
+SQL> select * from dummytest;
+
+DUMMY
+------------------------------
+Before Backup
+
+SQL> insert into dummytest values ('After Backup');
+
+1 row created.
+
+SQL> alter system switch logfile;
+
+System altered.
+
+SQL> insert into dummytest values ('After Backup and logswitch 1');
+
+1 row created.
+
+SQL> alter system switch logfile;
+
+System altered.
+
+SQL> insert into dummytest values ('After Backup and logswitch 2');
+
+1 row created.
+
+SQL> alter system switch logfile;
+
+System altered.
+
+SQL> insert into dummytest values ('After Backup and logswitch 3');
+
+1 row created.
+
+SQL> alter system switch logfile;
+
+System altered.
+
+SQL> insert into dummytest values ('After Backup and logswitch 4');
+
+1 row created.
+
+SQL> alter system switch logfile;
+
+System altered.
+
+SQL> select * from dummytest;
+
+DUMMY
+------------------------------
+Before Backup
+After Backup
+After Backup and logswitch 1
+After Backup and logswitch 2
+After Backup and logswitch 3
+After Backup and logswitch 4
+
+6 rows selected.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> shutdown immediate;
+Database closed.
+Database dismounted.
+ORACLE instance shut down.
+SQL>

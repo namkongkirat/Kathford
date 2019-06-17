@@ -1,0 +1,145 @@
+SQL*Plus: Release 10.2.0.1.0 - Production on Thu May 23 11:12:30 2019
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+Enter user-name: ram
+Enter password:
+
+Connected to:
+Oracle Database 10g Express Edition Release 10.2.0.1.0 - Production
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+TEST                           TABLE
+EMP                            TABLE
+STUDENT                        TABLE
+DEPARTMENT                     TABLE
+ENROLL                         TABLE
+ACCOUNTS                       TABLE
+STUDENTVIEW1                   VIEW
+VIEW2                          VIEW
+VIEW3                          VIEW
+VIEW4                          VIEW
+
+10 rows selected.
+
+SQL> desc student
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CRN                                       NOT NULL NUMBER(5)
+ NAME                                               VARCHAR2(70)
+ EMAIL                                              VARCHAR2(100)
+ MOBILE                                             VARCHAR2(50)
+ PARENTSNAME                                        VARCHAR2(100)
+
+SQL> create index student_index on student (crn);
+create index student_index on student (crn)
+                                       *
+ERROR at line 1:
+ORA-01408: such column list already indexed
+
+
+SQL> create index student_index on student (crn) compute statistics;
+create index student_index on student (crn) compute statistics
+                                       *
+ERROR at line 1:
+ORA-01408: such column list already indexed
+
+
+SQL> create table employee(
+  2  empid number(4) primary key,
+  3  ename varchar2(50),
+  4  salary number(10),
+  5  deptid number(3)
+  6  );
+
+Table created.
+
+SQL> Insert all
+  2  into employee values(1, 'Ashish', 20000, 1)
+  3  into employee values(2, 'Parish', 25000, 2)
+  4  into employee values(3, 'Sameer', 30000, 1)
+  5  select 1 from dual;
+
+3 rows created.
+
+
+SQL> create or replace function get_sal(emp_id in number)
+  2  return number
+  3  is sal number(10);
+  4  begin
+  5  select salary into sal from employee where empid = emp_id;
+  6  return(sal);
+  7  end;
+  8  /
+
+Function created.
+
+SQL> select get_sal(1) from dual;
+
+GET_SAL(1)
+----------
+     20000
+
+SQL> select get_sal(1) as salary from dual;
+
+    SALARY
+----------
+     20000
+
+SQL> connect system;
+Enter password:
+Connected.
+SQL> alter user hr account unlock;
+
+User altered.
+
+SQL> connect hr
+Enter password:
+ERROR:
+ORA-28001: the password has expired
+
+
+Changing password for hr
+New password:
+Retype new password:
+Password changed
+Connected.
+SQL> select * from tab
+  2  ;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+REGIONS                        TABLE
+COUNTRIES                      TABLE
+LOCATIONS                      TABLE
+DEPARTMENTS                    TABLE
+JOBS                           TABLE
+EMPLOYEES                      TABLE
+JOB_HISTORY                    TABLE
+EMP_DETAILS_VIEW               VIEW
+
+8 rows selected.
+
+SQL> desc employees;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPLOYEE_ID                               NOT NULL NUMBER(6)
+ FIRST_NAME                                         VARCHAR2(20)
+ LAST_NAME                                 NOT NULL VARCHAR2(25)
+ EMAIL                                     NOT NULL VARCHAR2(25)
+ PHONE_NUMBER                                       VARCHAR2(20)
+ HIRE_DATE                                 NOT NULL DATE
+ JOB_ID                                    NOT NULL VARCHAR2(10)
+ SALARY                                             NUMBER(8,2)
+ COMMISSION_PCT                                     NUMBER(2,2)
+ MANAGER_ID                                         NUMBER(6)
+ DEPARTMENT_ID                                      NUMBER(4)
+
+SQL> commit;
+
+Commit complete.
+
+
