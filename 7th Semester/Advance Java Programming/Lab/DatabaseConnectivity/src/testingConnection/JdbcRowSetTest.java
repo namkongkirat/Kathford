@@ -14,7 +14,7 @@ import com.sun.rowset.JdbcRowSetImpl;
  * @author namko
  */
 public class JdbcRowSetTest{
-    static final String DATABASE_URL = "jdbc:mysql://localhost/books";
+    static final String DATABASE_URL = "jdbc:mysql://localhost:3306/books";
     static final String USERNAME = "root";
     static final String PASSWORD = "";
     public JdbcRowSetTest()
@@ -30,6 +30,30 @@ public class JdbcRowSetTest{
             
             ResultSetMetaData metaData = rowSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
+            
+          /*=========INSERT==============
+            rowSet.last();
+            rowSet.moveToInsertRow();
+            rowSet.updateInt("sn", 7);
+            rowSet.updateString("firstname", "Aniket");
+            rowSet.updateString("lastname", "Maharjan");
+            rowSet.insertRow();
+            rowSet.first(); */
+          
+          
+          /*=========DELETE==============
+            rowSet.last();
+            rowSet.deleteRow();
+            rowSet.first(); */
+          
+          
+          /*==========UPDATE============
+            rowSet.absolute(2);
+            rowSet.updateString("firstname", "Ram");
+            rowSet.updateString("lastname", "Bhitrikoti");
+            rowSet.updateRow();
+            rowSet.first(); */
+          
             System.out.println( "Authors Table of Books Database:\n" );
             for ( int i = 1; i <= numberOfColumns; i++ )
                 System.out.printf( "%-8s\t", metaData.getColumnName( i ) );
@@ -51,5 +75,6 @@ public class JdbcRowSetTest{
     public static void main( String args[] )
     {
         JdbcRowSetTest application = new JdbcRowSetTest();
+        
     }
 }

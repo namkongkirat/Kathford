@@ -13,9 +13,6 @@ import java.io.InputStream;
  */
 public class FileInputStreamDemo {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args )throws Exception {
         int Size;
         InputStream f = new FileInputStream ("C:\\Academics\\Codes\\Kathford\\7th Semester\\Advance Java Programming\\Lab\\LAB\\src\\LAB1\\FileInputStreamDemo.Java");
