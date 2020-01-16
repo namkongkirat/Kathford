@@ -19,16 +19,14 @@ public class Client
         {
             System.out.println("CLIENT:......\n");
             Socket con=new Socket("10.0.0.12",95);
-            BufferedReader in=new BufferedReader(new
-            InputStreamReader(con.getInputStream()));
+            BufferedReader in=new BufferedReader(new InputStreamReader(con.getInputStream()));
             PrintWriter out=new PrintWriter(con.getOutputStream(),true);
             while(true)
             {
                 String s1=in.readLine();
                 System.out.println("From Server:"+s1);
                 System.out.print("Enter the messages to the server:");
-                BufferedReader din=new BufferedReader(new
-                InputStreamReader(System.in));
+                BufferedReader din=new BufferedReader(new InputStreamReader(System.in));
                 String st=din.readLine();
                 out.println(st);
                 if(st.equalsIgnoreCase("Bye")||st==null)break;
